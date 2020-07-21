@@ -1,0 +1,51 @@
+package com.lucierp.security;
+
+import java.io.IOException;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.lucierp.security.jwt.JwtConstants;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.filter.GenericFilterBean;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+
+public class AuthFilter extends GenericFilterBean{
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+    throws IOException, ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
+        HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
+
+        String authHeader = httpRequest.getHeader("Authorization");
+        System.out.println("authHeader: " + authHeader);
+        if(authHeader != null){
+            String[] authHeaderArr = authHeader.split("Bearer ");
+            if(authHeaderArr.length > 1 && authHeaderArr[1] != null){
+                String token = authHeaderArr[1];
+                System.out.println("This token: " + token);
+                try {
+                    Claims claims = Jwts.parser().setSigningKey(JwtConstants.API_SECRET_KEY)
+                    .parseClaimsJws(token).getBody();
+                    httpRequest.setAttribute("username", claims.get("username"));
+                } catch(Exception e){
+                    httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "invalid/expired token");
+                    return;
+                }
+            } else{
+                httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "Authorization token must be Bearer [token]");
+                return;
+            }
+        } else {
+            System.out.println("This is null");
+            httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "Authorization token must be provided");
+            return;
+        }
+        filterChain.doFilter(servletRequest, servletResponse);
+    }
+    
+}
