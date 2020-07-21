@@ -2,12 +2,12 @@ package com.lucierp.repositories;
 
 import com.lucierp.exceptions.AuthException;
 import com.lucierp.models.User;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.mindrot.jbcrypt.*;
 
 @Repository
 public class UserRepository {
@@ -25,7 +25,10 @@ public class UserRepository {
     public User findByUsernameAndPassword(String username, String password){
         try {
             User user = jdbcTemplate.queryForObject(SQL_FIND_BY_USERNAME, new Object[]{username}, userRowMapper);
-            if(!password.equals(user.getPassword())) throw new AuthException("Invalid username/password");
+            // if(!password.equals(user.getPassword())) throw new AuthException("Invalid username/password");
+            /* Password check hashed value with salt */
+            if(!BCrypt.checkpw(password,user.getPassword())) throw new AuthException("Invalid username/password");
+            // System.out.println("Hashed value: " + user.getPassword());
             return user;
         } catch(EmptyResultDataAccessException e) {
             throw new AuthException("Invalid username/password");
