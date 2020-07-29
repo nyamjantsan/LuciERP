@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -10,11 +11,22 @@ import MenuItem from '@material-ui/core/MenuItem';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Badge from '@material-ui/core/Badge';
-import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import FaceIcon from '@material-ui/icons/Face';
+import SettingsIcon from '@material-ui/icons/Settings';
 import PersonIcon from '@material-ui/icons/Person';
+import { Link } from "react-router-dom";
+
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import HomeIcon from '@material-ui/icons/Home';
+import MailIcon from '@material-ui/icons/Mail';
+import FingerprintIcon from '@material-ui/icons/Fingerprint';
+import ContactSupportIcon from '@material-ui/icons/ContactSupport';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,6 +38,12 @@ const useStyles = makeStyles((theme) => ({
     title: {
       flexGrow: 1,
     },
+    list: {
+        width: 300,
+      },
+      fullList: {
+        width: 'auto',
+      },
   }));
 
 function Header() {
@@ -39,19 +57,84 @@ function Header() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const [state, setState] = React.useState({
+        top: false,
+        left: false,
+        bottom: false,
+        right: false,
+      });
+    
+    const toggleDrawer = (anchor, open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+        return;
+    }
 
+    setState({ ...state, [anchor]: open });
+    };
+    const anchor = 'left';
+    const list = (anchor) => (
+        <div
+          className={clsx(classes.list, {
+            [classes.fullList]: anchor === 'top' || anchor === 'bottom',
+          })}
+          role="presentation"
+          onClick={toggleDrawer(anchor, false)}
+          onKeyDown={toggleDrawer(anchor, false)}
+        >
+          <List>
+          <ListItem button>
+            <ListItemIcon>
+              <MenuIcon/>
+            </ListItemIcon>
+            <Typography variant="h6" color="primary" className={classes.title}>
+                    LuciERP
+                </Typography>
+          </ListItem>
+          </List>
+          <Divider/>
+          <List>
+            <ListItem button>
+              <ListItemIcon>
+                <HomeIcon/>
+              </ListItemIcon>
+              <ListItemText primary="Home" />
+            </ListItem>
+            <ListItem button>
+              <ListItemIcon>
+                <DashboardIcon/>
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </ListItem>
+            <ListItem button>
+              <ListItemIcon>
+                <ContactSupportIcon/>
+              </ListItemIcon>
+              <ListItemText primary="HelpDesk" />
+            </ListItem>
+          </List>
+          <Divider />
+          <List>
+            <ListItem button>
+              <ListItemIcon>
+                <FingerprintIcon/>
+              </ListItemIcon>
+              <ListItemText primary="Хүний нөөцийн систем" />
+            </ListItem>
+          </List>
+        </div>
+      );
     return(
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
-                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                <IconButton  onClick={toggleDrawer(anchor, true)} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                     <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>
-                    Luci ERP
+                    LuciERP
                 </Typography>
                 <IconButton aria-label="show 4 new mail" color="inherit">
-                    <Badge badgeContent={4} color="secondary">
+                    <Badge badgeContent={4} color="error">
                         <MailIcon />
                     </Badge>
                 </IconButton>
@@ -76,19 +159,19 @@ function Header() {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                 >
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem component={Link} to={'/'} onClick={handleClose}>
                         <ListItemIcon>
-                            <FaceIcon fontSize="small" />
+                          <PersonIcon fontSize="small" />
                         </ListItemIcon>
                         <Typography variant="inherit">Ажилтаны мэдээлэл</Typography>
                     </MenuItem>
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem component={Link} to={'/profile'} onClick={handleClose} >
                         <ListItemIcon>
-                            <PersonIcon fontSize="small" />
+                            <SettingsIcon fontSize="small" />
                         </ListItemIcon>
-                        <Typography variant="inherit">Миний аккаунт</Typography>
+                        <Typography variant="inherit">Тохиргоо</Typography>
                     </MenuItem>
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem component={Link} to={'/'} onClick={handleClose}>
                         <ListItemIcon>
                             <ExitToAppIcon fontSize="small" />
                         </ListItemIcon>
@@ -97,6 +180,9 @@ function Header() {
                 </Menu>
                 </Toolbar>
             </AppBar>
+            <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
+            {list(anchor)}
+          </Drawer>
         </div>
     );
 }
