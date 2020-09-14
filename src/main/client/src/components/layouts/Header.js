@@ -159,13 +159,13 @@ function Header() {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                 >
-                    <MenuItem component={Link} to={'/'} onClick={handleClose}>
+                    <MenuItem component={Link} to={'/profile'} onClick={handleClose}>
                         <ListItemIcon>
                           <PersonIcon fontSize="small" />
                         </ListItemIcon>
                         <Typography variant="inherit">Ажилтаны мэдээлэл</Typography>
                     </MenuItem>
-                    <MenuItem component={Link} to={'/profile'} onClick={handleClose} >
+                    <MenuItem component={Link} to={'/'} onClick={handleClose} >
                         <ListItemIcon>
                             <SettingsIcon fontSize="small" />
                         </ListItemIcon>
