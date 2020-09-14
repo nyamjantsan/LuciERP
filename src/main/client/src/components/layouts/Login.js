@@ -9,7 +9,7 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
+// import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { login } from '../../actions/auth';
 
@@ -73,10 +73,10 @@ class Login extends Component {
           email: this.state.email,
           password: this.state.password
       }
-
+      //console.log("User: " + user);
       login(user).then(res => {
           if (res) {
-              this.props.history.push(`/home`)
+              // this.props.history.push(`/home`)
               console.log("Result:" + res);
           }
           else {
@@ -93,7 +93,7 @@ class Login extends Component {
         <div style={paper}>
           <Avatar variant="rounded"  style={logo} src="login-logo.png">
           </Avatar>
-          <form  noValidate>
+          <form  noValidate onSubmit={this.onSubmit}>
             <TextField
               margin="normal"
               required
