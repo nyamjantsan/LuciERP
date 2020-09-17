@@ -3,13 +3,13 @@ import axios from 'axios';
 export const login = user => {
     return axios
         .post(
-            'https://reqres.in/api/login',
+            'http://localhost:8085/api/users/auth',
             {
-                email: user.email,
+                username: user.username,
                 password: user.password
             },
             {
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 'Content-Type': 'application/json'}
             }
         )
         .then(response => {

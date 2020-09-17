@@ -93,7 +93,7 @@ function Header() {
           </List>
           <Divider/>
           <List>
-            <ListItem button>
+            <ListItem button component={Link} to={'/default'} onClick={handleClose}>
               <ListItemIcon>
                 <HomeIcon/>
               </ListItemIcon>
@@ -165,7 +165,7 @@ function Header() {
                         </ListItemIcon>
                         <Typography variant="inherit">Ажилтаны мэдээлэл</Typography>
                     </MenuItem>
-                    <MenuItem component={Link} to={'/'} onClick={handleClose} >
+                    <MenuItem component={Link} to={'/settings'} onClick={handleClose} >
                         <ListItemIcon>
                             <SettingsIcon fontSize="small" />
                         </ListItemIcon>

@@ -12,12 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/users")
 public class UserController {
 
@@ -28,6 +31,8 @@ public class UserController {
     public ResponseEntity<Map<String, String>> LoginUser(@RequestBody Map<String, Object> userMap){
         String username = (String) userMap.get("username");
         String password = (String) userMap.get("password");
+        System.out.println("username: " + username);
+        System.out.println("password: "+ password);
         User user = userService.validateUser(username, password);
         // Map<String, String> map = new HashMap<>();
         // map.put("message", "Login Successfully");

@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 // import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { login } from '../../actions/auth';
+import { withRouter } from "react-router-dom";
 
   
   // const useStyles = makeStyles((theme) => ({
@@ -54,7 +55,7 @@ class Login extends Component {
   constructor() {
       super()
       this.state = {
-          email: '',
+          username: '',
           password: '',
           errors: {}
       }
@@ -70,13 +71,13 @@ class Login extends Component {
       e.preventDefault()
 
       const user = {
-          email: this.state.email,
+          username: this.state.username,
           password: this.state.password
       }
       //console.log("User: " + user);
       login(user).then(res => {
           if (res) {
-              // this.props.history.push(`/home`)
+              this.props.history.push(`/default`)
               console.log("Result:" + res);
           }
           else {
@@ -98,13 +99,12 @@ class Login extends Component {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              value={this.state.email}
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
+              value={this.state.username}
               onChange={this.onChange}
-              autoFocus
             />
             <TextField
               margin="normal"
@@ -153,5 +153,5 @@ class Login extends Component {
     );
   }
 }
-export default Login;
+export default withRouter(Login);
 
